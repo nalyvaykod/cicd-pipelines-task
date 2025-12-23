@@ -1,0 +1,61 @@
+trigger:
+  - main
+
+pr:
+  - main
+
+pool:
+  name: 'Default'
+
+variables:
+#Backend Config
+  azureServiceConnection: 'Azure-Connection' 
+  resourceGroup: 'bestrongtf-rg-backend'
+  storageAccount: 'bestrongtfsakeu4g'
+  container: 'tfstate'
+  tfStateKey: 'beStrong.tfstate'
+
+steps:
+
+#Install Terraform CLI
+- task: TerraformInstaller@1
+  displayName: 'Install Terraform'
+  inputs:
+    terraformVersion: 'latest'
+
+#Initialize Terraform
+- task: TerraformTaskV4@4
+  displayName: 'Terraform Init'
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    backendServiceArm: $(azureServiceConnection)
+    backendAzureRmResourceGroupName: $(resourceGroup)
+    backendAzureRmStorageAccountName: $(storageAccount)
+    backendAzureRmContainerName: $(container)
+    backendAzureRmKey: $(tfStateKey)
+
+#Validate Terraform
+- task: TerraformTaskV4@4
+  displayName: 'Terraform Validate'
+  inputs:
+    provider: 'azurerm'
+    command: 'validate'
+
+#Plan Terraform
+- task: TerraformTaskV4@4
+  displayName: 'Terraform Plan'
+  inputs:
+    provider: 'azurerm'
+    command: 'plan'
+    environmentServiceNameAzureRM: $(azureServiceConnection)
+
+#Apply Terraform
+- task: TerraformTaskV4@4
+  displayName: 'Terraform Apply'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), ne(variables['Build.Reason'], 'PullRequest'))
+  inputs:
+    provider: 'azurerm'
+    command: 'apply'
+    environmentServiceNameAzureRM: $(azureServiceConnection)
+    commandOptions: '-auto-approve'
