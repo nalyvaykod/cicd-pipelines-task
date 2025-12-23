@@ -52,6 +52,8 @@ resource "azurerm_private_dns_zone" "acr_dns" {
 #Link DNS Zones
 resource "azurerm_private_dns_zone_virtual_network_link" "vnet_link" {
   count               = 3
+  #One more pipeline test
+
   name                = "vnet-link-${count.index}"
   resource_group_name = azurerm_resource_group.main.name
   private_dns_zone_name = element([

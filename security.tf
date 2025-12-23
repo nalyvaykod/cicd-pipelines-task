@@ -18,6 +18,7 @@ resource "azurerm_key_vault" "vault" {
   sku_name            = "standard"
   public_network_access_enabled = false
 }
+  #One more pipeline test
 
 # Key Vault Access Policy
 resource "azurerm_key_vault_access_policy" "app_access" {
@@ -40,6 +41,7 @@ resource "azurerm_private_endpoint" "sql_pe" {
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
   subnet_id           = azurerm_subnet.private_endpoints.id
+  #One more pipeline test
 
   private_service_connection {
     name                           = "sql-conn"
