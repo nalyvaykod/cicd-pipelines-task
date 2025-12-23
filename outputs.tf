@@ -6,6 +6,7 @@ output "resource_group_name" {
 output "container_app_url" {
   description = "Internal FQDN of the application"
   value       = azurerm_container_app.app.latest_revision_fqdn
+  #Test pipeline by this comment
 }
 
 output "managed_identity_principal_id" {
