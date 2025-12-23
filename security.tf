@@ -7,6 +7,7 @@ resource "azurerm_container_registry" "acr" {
   location            = azurerm_resource_group.main.location
   sku                 = "Basic"
 }
+  #Test pipeline by this comment
 
 # 4. Key Vault
 resource "azurerm_key_vault" "vault" {
